@@ -20,6 +20,8 @@ const bodyParser = require('body-parser');
 const templates = require('./templates');
 const path = require('path');
 
+app.use(require('errorhandler')());
+
 // Useful links:
 // https://cloud.google.com/iap/docs/external-identities
 // https://cloud.google.com/iap/docs/signed-headers-howto
@@ -65,18 +67,22 @@ function getProjectNumber() {
  */
 function serveContentForUser(template, req, res, decodedClaims) {
   let gcipClaims = decodedClaims.gcip || null;
+  // Get IP address + X-Forwarded-For header.
+  let ip = req.ip;
+  if (req.get('X-Forwarded-For')) {
+    ip += ' (X-Forwarded-For: ' + req.get('X-Forwarded-For') + ')';
+  }
   res.set('Content-Type', 'text/html');
   res.end(template({
     sub: decodedClaims.sub,
     email: decodedClaims.email,
     emailVerifed: !!(gcipClaims && gcipClaims.email_verified),
     photoURL: gcipClaims && gcipClaims.picture,
-    displayName: (gcipClaims && gcipClaims.name) || 'N/A',
+    displayName: (gcipClaims && gcipClaims.name) || '',
     tenandId: (gcipClaims && gcipClaims.firebase && gcipClaims.firebase.tenant) || 'N/A',
     gcipClaims: JSON.stringify(gcipClaims, null, 2),
     iapClaims: JSON.stringify(decodedClaims, null, 2),
-    signoutURL: '?gcp-iap-mode=GCIP_SIGNOUT',
-    switchTenantURL: '?gcp-iap-mode=CLEAR_LOGIN_COOKIE',
+    ip: ip,
     sessionRefreshURL: '?gcp-iap-mode=SESSION_REFRESHER',
   }));
 }
