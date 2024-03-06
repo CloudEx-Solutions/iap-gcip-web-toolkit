@@ -48,7 +48,6 @@ const main = HandleBars.compile(`
           {{#if email}}
           <div id="email">Your email address is: {{email}}</div>
           {{/if}}
-          <div>You are visiting from: {{ip}}</div>
           <div class="claims">GCIP Claims:
             <pre id="gcip-claims">{{gcipClaims}}</pre>
           </div>

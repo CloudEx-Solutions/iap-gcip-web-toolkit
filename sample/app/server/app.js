@@ -67,11 +67,6 @@ function getProjectNumber() {
  */
 function serveContentForUser(template, req, res, decodedClaims) {
   let gcipClaims = decodedClaims.gcip || null;
-  // Get IP address + X-Forwarded-For header.
-  let ip = req.ip;
-  if (req.get('X-Forwarded-For')) {
-    ip += ' (X-Forwarded-For: ' + req.get('X-Forwarded-For') + ')';
-  }
   res.set('Content-Type', 'text/html');
   res.end(template({
     sub: decodedClaims.sub,
@@ -82,7 +77,6 @@ function serveContentForUser(template, req, res, decodedClaims) {
     tenandId: (gcipClaims && gcipClaims.firebase && gcipClaims.firebase.tenant) || 'N/A',
     gcipClaims: JSON.stringify(gcipClaims, null, 2),
     iapClaims: JSON.stringify(decodedClaims, null, 2),
-    ip: ip,
     sessionRefreshURL: '?gcp-iap-mode=SESSION_REFRESHER',
   }));
 }
