@@ -51,10 +51,7 @@ const main = HandleBars.compile(`
           <div class="claims">GCIP Claims:
             <pre id="gcip-claims">{{gcipClaims}}</pre>
           </div>
-          <div class="claims">
-            IAP Claims:
-            <pre id="iap-claims">{{iapClaims}}</pre>
-          </div>
+          
           <div class="clearfix"></div>
         </div>
       </div>

@@ -71,12 +71,9 @@ function serveContentForUser(template, req, res, decodedClaims) {
   res.end(template({
     sub: decodedClaims.sub,
     email: decodedClaims.email,
-    emailVerifed: !!(gcipClaims && gcipClaims.email_verified),
     photoURL: gcipClaims && gcipClaims.picture,
     displayName: (gcipClaims && gcipClaims.name) || '',
-    tenandId: (gcipClaims && gcipClaims.firebase && gcipClaims.firebase.tenant) || 'N/A',
     gcipClaims: JSON.stringify(gcipClaims, null, 2),
-    iapClaims: JSON.stringify(decodedClaims, null, 2),
     sessionRefreshURL: '?gcp-iap-mode=SESSION_REFRESHER',
   }));
 }
